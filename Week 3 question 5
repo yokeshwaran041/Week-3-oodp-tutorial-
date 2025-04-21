@@ -1,0 +1,187 @@
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+class Voter {
+private:
+    string voterID;
+    string name;
+    int age;
+    bool hasVoted;
+
+public:
+    Voter(string id, string n, int a) {
+        voterID = id;
+        name = n;
+        age = a;
+        hasVoted = false;
+    }
+
+    string getVoterID() {
+        return voterID;
+    }
+
+    bool getHasVoted() {
+        return hasVoted;
+    }
+
+    void setHasVoted(bool status) {
+        hasVoted = status;
+    }
+
+    void getDetails() {
+        cout << "Voter ID: " << voterID << ", Name: " << name << ", Age: " << age << endl;
+    }
+};
+
+class Candidate {
+private:
+    string candidateID;
+    string name;
+    string party;
+    int voteCount;
+
+public:
+    Candidate(string id, string n, string p) {
+        candidateID = id;
+        name = n;
+        party = p;
+        voteCount = 0;
+    }
+
+    string getCandidateID() {
+        return candidateID;
+    }
+
+    void incrementVoteCount() {
+        voteCount++;
+    }
+
+    int getVoteCount() {
+        return voteCount;
+    }
+
+    void getDetails() {
+        cout << "Candidate ID: " << candidateID << ", Name: " << name << ", Party: " << party << ", Votes: " << voteCount << endl;
+    }
+};
+
+class ElectionCommission {
+private:
+    vector<Voter> voters;
+    vector<Candidate> candidates;
+    bool electionStatus;
+
+public:
+    ElectionCommission() {
+        electionStatus = false;
+    }
+
+    void registerVoter(Voter v) {
+        voters.push_back(v);
+    }
+
+    void registerCandidate(Candidate c) {
+        candidates.push_back(c);
+    }
+
+    void startElection() {
+        electionStatus = true;
+        cout << "Election Started." << endl;
+    }
+
+    void stopElection() {
+        electionStatus = false;
+        cout << "Election Ended." << endl;
+    }
+
+    bool isElectionActive() {
+        return electionStatus;
+    }
+
+    Voter* findVoter(string id) {
+        for (auto& v : voters) {
+            if (v.getVoterID() == id) {
+                return &v;
+            }
+        }
+        return nullptr;
+    }
+
+    Candidate* findCandidate(string id) {
+        for (auto& c : candidates) {
+            if (c.getCandidateID() == id) {
+                return &c;
+            }
+        }
+        return nullptr;
+    }
+
+    void getResults() {
+        cout << "Election Results:" << endl;
+        for (auto& c : candidates) {
+            c.getDetails();
+        }
+    }
+};
+
+class VotingMachine {
+private:
+    string machineID;
+    string location;
+
+public:
+    VotingMachine(string id, string loc) {
+        machineID = id;
+        location = loc;
+    }
+
+    void castVote(ElectionCommission& ec, string voterID, string candidateID) {
+        if (!ec.isElectionActive()) {
+            cout << "Election is not active." << endl;
+            return;
+        }
+
+        Voter* voter = ec.findVoter(voterID);
+        Candidate* candidate = ec.findCandidate(candidateID);
+
+        if (!voter || !candidate) {
+            cout << "Invalid Voter or Candidate ID." << endl;
+            return;
+        }
+
+        if (voter->getHasVoted()) {
+            cout << "Voter has already voted." << endl;
+            return;
+        }
+
+        candidate->incrementVoteCount();
+        voter->setHasVoted(true);
+        cout << "Vote cast successfully." << endl;
+    }
+};
+
+int main() {
+    ElectionCommission ec;
+
+    ec.registerVoter(Voter("V001", "Alice", 25));
+    ec.registerVoter(Voter("V002", "Bob", 30));
+
+    ec.registerCandidate(Candidate("C001", "John", "Party A"));
+    ec.registerCandidate(Candidate("C002", "Emma", "Party B"));
+
+    ec.startElection();
+
+    VotingMachine vm("M001", "City Center");
+
+    vm.castVote(ec, "V001", "C001");
+    vm.castVote(ec, "V002", "C002");
+    vm.castVote(ec, "V001", "C002");
+
+    ec.stopElection();
+
+    ec.getResults();
+
+    return 0;
+}
