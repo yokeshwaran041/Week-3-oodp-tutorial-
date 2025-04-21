@@ -1,0 +1,51 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Car {
+private:
+    string brand;
+    string model;
+    double price;
+    int year;
+    static int totalCars;
+
+public:
+    Car(string b, string m, double p, int y) {
+        brand = b;
+        model = m;
+        price = p;
+        year = y;
+        totalCars++;
+    }
+
+    void displayCarInfo() {
+        cout << "Brand: " << brand << endl;
+        cout << "Model: " << model << endl;
+        cout << "Price: " << price << endl;
+        cout << "Year: " << year << endl;
+    }
+
+    static int getTotalCars() {
+        return totalCars;
+    }
+};
+
+int Car::totalCars = 0;
+
+int main() {
+    Car car1("Toyota", "Camry", 25000, 2022);
+    Car car2("Honda", "Civic", 22000, 2023);
+    Car car3("Ford", "Mustang", 40000, 2024);
+
+    car1.displayCarInfo();
+    cout << endl;
+    car2.displayCarInfo();
+    cout << endl;
+    car3.displayCarInfo();
+    cout << endl;
+
+    cout << "Total Cars in Inventory: " << Car::getTotalCars() << endl;
+
+    return 0;
+}
