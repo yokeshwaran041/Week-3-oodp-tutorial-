@@ -1,0 +1,51 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Product {
+private:
+    int productID;
+    string productName;
+    double price;
+    int quantity;
+
+public:
+    Product(int id, string name, double p, int qty) {
+        productID = id;
+        productName = name;
+        price = p;
+        quantity = qty;
+    }
+
+    double calculateTotalPrice() {
+        return price * quantity;
+    }
+
+    void productDetails() {
+        cout << "Product ID: " << productID << endl;
+        cout << "Product Name: " << productName << endl;
+        cout << "Price: " << price << endl;
+        cout << "Quantity: " << quantity << endl;
+        cout << "Total Price: " << calculateTotalPrice() << endl;
+    }
+};
+
+void displayCartDetails(Product products[], int size) {
+    for (int i = 0; i < size; ++i) {
+        products[i].productDetails();
+        cout << endl;
+    }
+}
+
+int main() {
+    Product cart[] = {
+        Product(101, "Laptop", 750.0, 2),
+        Product(102, "Smartphone", 500.0, 3),
+        Product(103, "Headphones", 50.0, 5)
+    };
+
+    int cartSize = sizeof(cart) / sizeof(cart[0]);
+    displayCartDetails(cart, cartSize);
+
+    return 0;
+}
